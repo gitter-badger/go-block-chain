@@ -2,14 +2,16 @@ package blockchain
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/gob"
 	"log"
 )
 
 // Block structure for the Block dataType
 type Block struct {
+	// Data         []byte
 	Hash         []byte
-	Data         []byte
+	Transactions []*Transaction
 	PreviousHash []byte
 	Nonce        int
 }
@@ -21,9 +23,20 @@ type Block struct {
 // 	block.Hash = hash[:]
 // }
 
+// HashTransactions to hash the transactions list for the block
+func (block *Block) HashTransactions() []byte {
+	var txHashes [][]byte
+	var txHash [32]byte
+	for _, tx := range block.Transactions {
+		txHashes = append(txHashes, tx.ID)
+	}
+	txHash = sha256.Sum256(bytes.Join(txHashes, []byte{}))
+	return txHash[:]
+}
+
 // CreateBlock from the PreviousHash of the same BlockChain
-func CreateBlock(data string, previousHash []byte) *Block {
-	block := &Block{[]byte{}, []byte(data), previousHash, 0}
+func CreateBlock(txns []*Transaction, previousHash []byte) *Block {
+	block := &Block{[]byte{}, txns, previousHash, 0}
 	// block.DeriveHash()
 	proofOfWork := NewProof(block)
 	nonce, hash := proofOfWork.Run()
@@ -33,8 +46,9 @@ func CreateBlock(data string, previousHash []byte) *Block {
 }
 
 // Genesis of the BlockChain
-func Genesis() *Block {
-	return CreateBlock("Genesis", []byte{})
+func Genesis(coinbase *Transaction) *Block {
+	// return CreateBlock("Genesis", []byte{})
+	return CreateBlock([]*Transaction{coinbase}, []byte{})
 }
 
 // Serialize for serializing the output for BadgerDB

@@ -2,17 +2,20 @@ package blockchain
 
 import (
 	"fmt"
+	"os"
+	"runtime"
 
 	"github.com/dgraph-io/badger"
 )
 
 const (
-	dbPath = "./tmp/blocks"
+	dbPath      = "./tmp/blocks"
+	dbFile      = "./tmp/blocks/MANIFEST"
+	genesisData = "FIRST TRANSACTION FROM GENESIS."
 )
 
 // BlockChain structure for the BlockChain dataType
 type BlockChain struct {
-	// Blocks []*Block
 	LastHash []byte
 	DataBase *badger.DB
 }
@@ -23,9 +26,19 @@ type ChainIterator struct {
 	DataBase    *badger.DB
 }
 
-// InitBlockChain to initialize the BlockChain
-func InitBlockChain() *BlockChain {
-	// return &BlockChain{[]*Block{Genesis()}}
+func badgerDBExists() bool {
+	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+// ContinueBlockChain to continue runnings through blockchain validation
+func ContinueBlockChain(address string) *BlockChain {
+	if badgerDBExists() == false {
+		fmt.Println("NO EXISTING BLOCKCHAIN FOUND.\nCREATE ONE.")
+		runtime.Goexit()
+	}
 	var lastHash []byte
 	options := badger.DefaultOptions
 	options.Dir = dbPath
@@ -33,18 +46,37 @@ func InitBlockChain() *BlockChain {
 	database, err := badger.Open(options)
 	Handle(err)
 	err = database.Update(func(txn *badger.Txn) error {
-		if _, err := txn.Get([]byte("lh")); err == badger.ErrKeyNotFound {
-			fmt.Println("NO EXISTING BLOCKCHAIN FOUND.")
-			genesis := Genesis()
-			fmt.Println("GENESIS() PROVED.")
-			err = txn.Set(genesis.Hash, genesis.Serialize())
-			Handle(err)
-			err = txn.Set([]byte("lh"), genesis.Hash)
-			lastHash = genesis.Hash
-			return err
-		}
 		item, err := txn.Get([]byte("lh"))
+		Handle(err)
 		lastHash, err = item.Value()
+		return err
+	})
+	Handle(err)
+	blockchain := BlockChain{lastHash, database}
+	return &blockchain
+}
+
+// InitBlockChain to initialize the BlockChain
+func InitBlockChain(address string) *BlockChain {
+	if badgerDBExists() {
+		fmt.Println("BLOCKCHAIN ALREADY EXISTS.")
+		runtime.Goexit()
+	}
+	var lastHash []byte
+
+	options := badger.DefaultOptions
+	options.Dir = dbPath
+	options.ValueDir = dbPath
+	database, err := badger.Open(options)
+	Handle(err)
+	err = database.Update(func(txn *badger.Txn) error {
+		coinBaseTransaction := CoinBaseTx(address, genesisData)
+		genesis := Genesis(coinBaseTransaction)
+		fmt.Println("GENESIS CREATED.")
+		err = txn.Set(genesis.Hash, genesis.Serialize())
+		Handle(err)
+		err = txn.Set([]byte("lh"), genesis.Hash)
+		lastHash = genesis.Hash
 		return err
 	})
 	Handle(err)
@@ -54,9 +86,6 @@ func InitBlockChain() *BlockChain {
 
 // AddBlock to the existing BlockChain
 func (blockChain *BlockChain) AddBlock(data string) {
-	// previousBlock := blockChain.Blocks[len(blockChain.Blocks)-1]
-	// newBlock := CreateBlock(data, previousBlock.Hash)
-	// blockChain.Blocks = append(blockChain.Blocks, newBlock)
 	var lastHash []byte
 	err := blockChain.DataBase.View(func(txn *badger.Txn) error {
 		item, err := txn.Get([]byte("lh"))
