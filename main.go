@@ -95,6 +95,6 @@ func main() {
 	// 	fmt.Println()
 	// }
 	defer chain.DataBase.Close()
-	commandLinenIterface := CommandLineInterface{chain}
-	commandLinenIterface.run()
+	commandLineIterface := CommandLineInterface{chain}
+	commandLineIterface.run()
 }
