@@ -9,6 +9,7 @@ import (
 	"github.com/dgraph-io/badger"
 )
 
+// constants for the blockchain
 const (
 	dbPath      = "./tmp/blocks"
 	dbFile      = "./tmp/blocks/MANIFEST"
@@ -27,6 +28,7 @@ type ChainIterator struct {
 	DataBase    *badger.DB
 }
 
+// badgerDBExists for checking the availability of database
 func badgerDBExists() bool {
 	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
 		return false
@@ -59,7 +61,6 @@ func ContinueBlockChain(address string) *BlockChain {
 
 // InitBlockChain to initialize the BlockChain
 func InitBlockChain(address string) *BlockChain {
-
 	if badgerDBExists() {
 		fmt.Println("BLOCKCHAIN ALREADY EXISTS.")
 		runtime.Goexit()
@@ -127,6 +128,7 @@ func (iterator *ChainIterator) Next() *Block {
 	return block
 }
 
+// FindUnspentTransactions in the BlockChain
 func (blockchain *BlockChain) FindUnspentTransactions(address string) []Transaction {
 	var unSpentTransactions []Transaction
 	spentTxns := make(map[string][]int)
@@ -164,6 +166,7 @@ func (blockchain *BlockChain) FindUnspentTransactions(address string) []Transact
 	return unSpentTransactions
 }
 
+// FindUnspentTransactionsOutputs for getting the unspent transactions in BlockChain
 func (blockchain *BlockChain) FindUnspentTransactionsOutputs(address string) []TxOutput {
 	var unSpentTransactionOutputs []TxOutput
 	unSpentTransactions := blockchain.FindUnspentTransactions(address)
@@ -177,6 +180,7 @@ func (blockchain *BlockChain) FindUnspentTransactionsOutputs(address string) []T
 	return unSpentTransactionOutputs
 }
 
+// FindSpendableOutputs to find the spendable outputs in the BlockChain
 func (blockchain *BlockChain) FindSpendableOutputs(address string, amount int) (int, map[string][]int) {
 	unSpentOutputs := make(map[string][]int)
 	unSpentTransactions := blockchain.FindUnspentTransactions(address)
