@@ -6,6 +6,6 @@ require (
 	github.com/dgryski/go-farm v0.0.0-20180109070241-2de33835d102 // indirect
 	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/pkg/errors v0.8.0 // indirect
-	golang.org/x/net v0.0.0-20181113165502-88d92db4c548 // indirect
+	golang.org/x/net v0.0.0-20181114220301-adae6a3d119a // indirect
 	golang.org/x/sys v0.0.0-20181107165924-66b7b1311ac8 // indirect
 )

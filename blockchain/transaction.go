@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/gob"
+	"encoding/hex"
 	"fmt"
+	"log"
 )
 
 // Transaction structure for the Transaction
@@ -14,7 +16,7 @@ type Transaction struct {
 	Outputs []TxOutput
 }
 
-// TxOutput for Output for the BlockChain
+// TxOutput for Output for the BlockChainw
 type TxOutput struct {
 	Value     int
 	PublicKey string
@@ -63,4 +65,29 @@ func (in *TxInput) CanUnlock(data string) bool {
 // CanBeUnlocked to check whether the transaction can be unlocked
 func (out *TxOutput) CanBeUnlocked(data string) bool {
 	return out.PublicKey == data
+}
+
+// NewTransaction for creating a new Transaction in the BlockChain
+func NewTransaction(from, to string, amount int, blockchain *BlockChain) *Transaction {
+	var inputs []TxInput
+	var outputs []TxOutput
+	accumulator, validOutputs := blockchain.FindSpendableOutputs(from, amount)
+	if accumulator < amount {
+		log.Panic("ERROR: NOT ENOUGH FUNDS !")
+	}
+	for txID, outputs := range validOutputs {
+		txIDString, err := hex.DecodeString(txID)
+		Handle(err)
+		for _, output := range outputs {
+			input := TxInput{txIDString, output, from}
+			inputs = append(inputs, input)
+		}
+	}
+	outputs = append(outputs, TxOutput{amount, to})
+	if accumulator > amount {
+		outputs = append(outputs, TxOutput{accumulator - amount, from})
+	}
+	tx := Transaction{nil, inputs, outputs}
+	tx.SetID()
+	return &tx
 }
