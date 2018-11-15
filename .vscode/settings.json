@@ -21,7 +21,6 @@
         "share": true,
         "run": true
     },
-    "go.lintTool": "gometalinter",
-    "go.lintOnSave": "workspace",
-    "go.gopath": "/usr/local/go/bin/go",
+    "go.lintOnSave": "file",
+    // "go.gopath": "/usr/local/go/bin/go",
 }

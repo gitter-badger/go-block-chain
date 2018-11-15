@@ -3,12 +3,11 @@ package command
 import (
 	"flag"
 	"fmt"
+	"github.com/the-code-innovator/go-block-chain/blockchain"
+	"github.com/the-code-innovator/go-block-chain/wallet"
 	"os"
 	"runtime"
 	"strconv"
-
-	"github.com/the-code-innovator/go-block-chain/blockchain"
-	"github.com/the-code-innovator/go-block-chain/wallet"
 )
 
 // CommandLineInterface struct for handling command line interface
@@ -19,7 +18,7 @@ func (commandLineInterface *CommandLineInterface) PrintUsage() {
 	fmt.Println("USAGE:")
 	fmt.Println("	getbalance -address ADDRESS - get balance for address.")
 	fmt.Println("	createblockchain -address ADDRESS - creates a blockchain.")
-	fmt.Println("	print - prints the blocks in the blockchain.")
+	fmt.Println("	printchain - prints the blocks in the blockchain.")
 	fmt.Println("	send -from FROM -to TO -amount AMOUNT - send amount from an address to an address.")
 	fmt.Println("	createwallet - creates a new wallet.")
 	fmt.Println("	listaddresses - lists all addresses in wallet file.")
