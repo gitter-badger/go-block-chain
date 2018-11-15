@@ -1,3 +1,27 @@
 {
 	"editor.tabSize": 4,
+	// "go.lintFlags": [
+    //     "--exclude=\"\bexported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported\b\""
+    // ],
+    "go.formatTool": "gofmt",
+    "go.buildOnSave": "off",
+    "go.coverOnSave": true,
+    "go.liveErrors": {
+        "enabled": true,
+        "delay": 1000
+    },
+    "go.autocompleteUnimportedPackages": true,
+    "go.enableCodeLens": {
+        "references": false,
+        "runtest": true
+    },
+    "go.goroot": "/usr/local/go/",
+    "go.playground": {
+        "openbrowser": true,
+        "share": true,
+        "run": true
+    },
+    "go.lintTool": "gometalinter",
+    "go.lintOnSave": "workspace",
+    "go.gopath": "/usr/local/go/bin/go",
 }
