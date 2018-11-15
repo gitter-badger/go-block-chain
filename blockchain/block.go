@@ -28,7 +28,7 @@ func CreateBlock(data string, previousHash []byte) *Block {
 	proofOfWork := NewProof(block)
 	nonce, hash := proofOfWork.Run()
 	block.Nonce = nonce
-	block.Hash = hash
+	block.Hash = hash[:]
 	return block
 }
 
