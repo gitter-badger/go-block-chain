@@ -10,81 +10,90 @@ import (
 	"math/big"
 )
 
-// Take Data from the Block
-// Create a Counter (nonce) which starts @ 0
-// Create a Hash of the Data + Counter
-// Check the Hash to see if it meets a Set of Requirements
-// Signs the Block, if meets the Set of Requirements
-// Create a Block if not.
-// Requirements:
-// First few Bytes must contain 0's.
+// Take the data from the block
 
-// Difficulty Parameter
+// create a counter (nonce) which starts at 0
+
+// create a hash of the data plus the counter
+
+// check the hash to see if it meets a set of requirements
+
+// Requirements:
+// The First few bytes must contain 0s
+
 const Difficulty = 18
 
-// ProofOfWork structure for the proof of Work
 type ProofOfWork struct {
 	Block  *Block
 	Target *big.Int
 }
 
-// NewProof for the new ProofOfWork for the Block
-func NewProof(block *Block) *ProofOfWork {
+func NewProof(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-Difficulty))
-	proofOfWork := &ProofOfWork{block, target}
-	return proofOfWork
+
+	pow := &ProofOfWork{b, target}
+
+	return pow
 }
 
-// InitData for initializing the data in the Block
-func (proofOfWork *ProofOfWork) InitData(nonce int) []byte {
+func (pow *ProofOfWork) InitData(nonce int) []byte {
 	data := bytes.Join(
 		[][]byte{
-			proofOfWork.Block.PreviousHash,
-			proofOfWork.Block.Data,
+			pow.Block.PrevHash,
+			pow.Block.Data,
 			ToHex(int64(nonce)),
 			ToHex(int64(Difficulty)),
 		},
 		[]byte{},
 	)
+
 	return data
 }
 
-// Run the computation for the BlockChain
-func (proofOfWork *ProofOfWork) Run() (int, []byte) {
+func (pow *ProofOfWork) Run() (int, []byte) {
 	var intHash big.Int
 	var hash [32]byte
+
 	nonce := 0
+
 	for nonce < math.MaxInt64 {
-		data := proofOfWork.InitData(nonce)
+		data := pow.InitData(nonce)
 		hash = sha256.Sum256(data)
-		fmt.Printf("\r%x", hash)
+
+		fmt.Printf("\r%x", hash[:])
 		intHash.SetBytes(hash[:])
-		if intHash.Cmp(proofOfWork.Target) == -1 {
+
+		if intHash.Cmp(pow.Target) == -1 {
 			break
 		} else {
 			nonce++
 		}
+
 	}
 	fmt.Println()
+
 	return nonce, hash[:]
 }
 
-// Validate for validation of the ProofOfWork
-func (proofOfWork *ProofOfWork) Validate() bool {
+func (pow *ProofOfWork) Validate() bool {
 	var intHash big.Int
-	data := proofOfWork.InitData(proofOfWork.Block.Nonce)
+
+	data := pow.InitData(pow.Block.Nonce)
+
 	hash := sha256.Sum256(data)
 	intHash.SetBytes(hash[:])
-	return intHash.Cmp(proofOfWork.Target) == -1
+
+	return intHash.Cmp(pow.Target) == -1
 }
 
-// ToHex to convert an integer to Hex
-func ToHex(number int64) []byte {
-	buffer := new(bytes.Buffer)
-	err := binary.Write(buffer, binary.BigEndian, number)
+func ToHex(num int64) []byte {
+	buff := new(bytes.Buffer)
+	err := binary.Write(buff, binary.BigEndian, num)
 	if err != nil {
 		log.Panic(err)
+
 	}
-	return buffer.Bytes()
+
+	return buff.Bytes()
 }

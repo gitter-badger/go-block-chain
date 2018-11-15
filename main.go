@@ -10,91 +10,86 @@ import (
 	"github.com/the-code-innovator/go-block-chain/blockchain"
 )
 
-// CommandLineInterface struct for handling command line interface
-type CommandLineInterface struct {
+type CommandLine struct {
 	blockchain *blockchain.BlockChain
 }
 
-func (commandLineInterface *CommandLineInterface) printUsage() {
-	fmt.Println("USAGE:")
-	fmt.Println("add -block BLOCK_DATA - to add a block to the blockchain.")
-	fmt.Println("print 				   - prints the blocks in the blockchain.")
+func (cli *CommandLine) printUsage() {
+	fmt.Println("Usage:")
+	fmt.Println(" add -block BLOCK_DATA - add a block to the chain")
+	fmt.Println(" print - Prints the blocks in the chain")
 }
 
-// ValidateArguments to validate the arguments for the CommandLineInterface
-func (commandLineInterface *CommandLineInterface) ValidateArguments() {
+func (cli *CommandLine) validateArgs() {
 	if len(os.Args) < 2 {
-		commandLineInterface.printUsage()
+		cli.printUsage()
 		runtime.Goexit()
 	}
 }
 
-// AddBlock to call inherent AddBlock into the BlockChain from commandLineInterface
-func (commandLineInterface *CommandLineInterface) AddBlock(data string) {
-	commandLineInterface.blockchain.AddBlock(data)
-	fmt.Println("ADDED BLOCK TO BLOCKCHAIN.")
+func (cli *CommandLine) addBlock(data string) {
+	cli.blockchain.AddBlock(data)
+	fmt.Println("Added Block!")
 }
 
-// PrintChain to print the Blocks in the BlockChain from commandLineInterface
-func (commandLineInterface *CommandLineInterface) PrintChain() {
-	iterator := commandLineInterface.blockchain.Iterator()
+func (cli *CommandLine) printChain() {
+	iter := cli.blockchain.Iterator()
+
 	for {
-		block := iterator.Next()
-		fmt.Printf("PREVIOUS HASH: %x\n", block.PreviousHash)
-		fmt.Printf("DATA IN BLOCK: %s\n", block.Data)
-		fmt.Printf("MAIN HASH: %x\n", block.Hash)
-		proofOfWork := blockchain.NewProof(block)
-		fmt.Printf("PROOF OF WORK: %s\n", strconv.FormatBool(proofOfWork.Validate()))
+		block := iter.Next()
+
+		fmt.Printf("Prev. hash: %x\n", block.PrevHash)
+		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Hash: %x\n", block.Hash)
+		pow := blockchain.NewProof(block)
+		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
 		fmt.Println()
-		if len(block.PreviousHash) == 0 {
+
+		if len(block.PrevHash) == 0 {
 			break
 		}
 	}
 }
 
-func (commandLineInterface *CommandLineInterface) run() {
-	commandLineInterface.ValidateArguments()
-	addBlockCommand := flag.NewFlagSet("add", flag.ExitOnError)
-	printChainCommand := flag.NewFlagSet("print", flag.ExitOnError)
-	addBlockData := addBlockCommand.String("block", "", "BLOCK_DATA")
+func (cli *CommandLine) run() {
+	cli.validateArgs()
+
+	addBlockCmd := flag.NewFlagSet("add", flag.ExitOnError)
+	printChainCmd := flag.NewFlagSet("print", flag.ExitOnError)
+	addBlockData := addBlockCmd.String("block", "", "Block data")
+
 	switch os.Args[1] {
 	case "add":
-		err := addBlockCommand.Parse(os.Args[2:])
+		err := addBlockCmd.Parse(os.Args[2:])
 		blockchain.Handle(err)
+
 	case "print":
-		err := printChainCommand.Parse(os.Args[2:])
+		err := printChainCmd.Parse(os.Args[2:])
 		blockchain.Handle(err)
-	case "default":
-		commandLineInterface.printUsage()
+
+	default:
+		cli.printUsage()
 		runtime.Goexit()
 	}
-	if addBlockCommand.Parsed() {
+
+	if addBlockCmd.Parsed() {
 		if *addBlockData == "" {
-			addBlockCommand.Usage()
+			addBlockCmd.Usage()
 			runtime.Goexit()
 		}
-		commandLineInterface.AddBlock(*addBlockData)
+		cli.addBlock(*addBlockData)
 	}
-	if printChainCommand.Parsed() {
-		commandLineInterface.PrintChain()
+
+	if printChainCmd.Parsed() {
+		cli.printChain()
 	}
 }
 
 func main() {
 	defer os.Exit(0)
 	chain := blockchain.InitBlockChain()
-	// chain.AddBlock("1st after genesis.")
-	// chain.AddBlock("2nd after genesis.")
-	// chain.AddBlock("3rd after genesis.")
-	// for _, block := range chain.Blocks {
-	// 	fmt.Printf("PREVIOUS HASH: %x\n", block.PreviousHash)
-	// 	fmt.Printf("DATA IN BLOCK: %s\n", block.Data)
-	// 	fmt.Printf("HASH: %x\n", block.Hash)
-	// 	proofOfWork := blockchain.NewProof(block)
-	// 	fmt.Printf("ProofOfWork: %s\n", strconv.FormatBool(proofOfWork.Validate()))
-	// 	fmt.Println()
-	// }
-	defer chain.DataBase.Close()
-	commandLinenIterface := CommandLineInterface{chain}
-	commandLinenIterface.run()
+	defer chain.Database.Close()
+
+	cli := CommandLine{chain}
+	cli.run()
 }

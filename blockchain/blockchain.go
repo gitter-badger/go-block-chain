@@ -10,89 +10,98 @@ const (
 	dbPath = "./tmp/blocks"
 )
 
-// BlockChain structure for the BlockChain dataType
 type BlockChain struct {
-	// Blocks []*Block
 	LastHash []byte
-	DataBase *badger.DB
+	Database *badger.DB
 }
 
-// ChainIterator to go through all the Blocks in badger.DB
-type ChainIterator struct {
+type BlockChainIterator struct {
 	CurrentHash []byte
-	DataBase    *badger.DB
+	Database    *badger.DB
 }
 
-// InitBlockChain to initialize the BlockChain
 func InitBlockChain() *BlockChain {
-	// return &BlockChain{[]*Block{Genesis()}}
 	var lastHash []byte
-	options := badger.DefaultOptions
-	options.Dir = dbPath
-	options.ValueDir = dbPath
-	database, err := badger.Open(options)
+
+	opts := badger.DefaultOptions
+	opts.Dir = dbPath
+	opts.ValueDir = dbPath
+
+	db, err := badger.Open(opts)
 	Handle(err)
-	err = database.Update(func(txn *badger.Txn) error {
+
+	err = db.Update(func(txn *badger.Txn) error {
 		if _, err := txn.Get([]byte("lh")); err == badger.ErrKeyNotFound {
-			fmt.Println("NO EXISTING BLOCKCHAIN FOUND.")
+			fmt.Println("No existing blockchain found")
 			genesis := Genesis()
-			fmt.Println("GENESIS PROVED.")
+			fmt.Println("Genesis proved")
 			err = txn.Set(genesis.Hash, genesis.Serialize())
 			Handle(err)
 			err = txn.Set([]byte("lh"), genesis.Hash)
+
 			lastHash = genesis.Hash
+
+			return err
+		} else {
+			item, err := txn.Get([]byte("lh"))
+			Handle(err)
+			lastHash, err = item.Value()
 			return err
 		}
-		item, err := txn.Get([]byte("lh"))
-		lastHash, err = item.Value()
-		return err
 	})
+
 	Handle(err)
-	blockchain := BlockChain{lastHash, database}
+
+	blockchain := BlockChain{lastHash, db}
 	return &blockchain
 }
 
-// AddBlock to the existing BlockChain
-func (blockChain *BlockChain) AddBlock(data string) {
-	// previousBlock := blockChain.Blocks[len(blockChain.Blocks)-1]
-	// newBlock := CreateBlock(data, previousBlock.Hash)
-	// blockChain.Blocks = append(blockChain.Blocks, newBlock)
+func (chain *BlockChain) AddBlock(data string) {
 	var lastHash []byte
-	err := blockChain.DataBase.View(func(txn *badger.Txn) error {
+
+	err := chain.Database.View(func(txn *badger.Txn) error {
 		item, err := txn.Get([]byte("lh"))
 		Handle(err)
 		lastHash, err = item.Value()
+
 		return err
 	})
 	Handle(err)
+
 	newBlock := CreateBlock(data, lastHash)
-	err = blockChain.DataBase.Update(func(txn *badger.Txn) error {
+
+	err = chain.Database.Update(func(txn *badger.Txn) error {
 		err := txn.Set(newBlock.Hash, newBlock.Serialize())
 		Handle(err)
 		err = txn.Set([]byte("lh"), newBlock.Hash)
-		blockChain.LastHash = newBlock.Hash
+
+		chain.LastHash = newBlock.Hash
+
 		return err
 	})
 	Handle(err)
 }
 
-// Iterator to get the Iterator over the badgerDB
-func (blockChain *BlockChain) Iterator() *ChainIterator {
-	iterator := &ChainIterator{blockChain.LastHash, blockChain.DataBase}
-	return iterator
+func (chain *BlockChain) Iterator() *BlockChainIterator {
+	iter := &BlockChainIterator{chain.LastHash, chain.Database}
+
+	return iter
 }
 
-// Next to iterate to the next Block in the badgerDB
-func (iterator *ChainIterator) Next() *Block {
+func (iter *BlockChainIterator) Next() *Block {
 	var block *Block
-	err := iterator.DataBase.View(func(txn *badger.Txn) error {
-		item, err := txn.Get(iterator.CurrentHash)
+
+	err := iter.Database.View(func(txn *badger.Txn) error {
+		item, err := txn.Get(iter.CurrentHash)
 		Handle(err)
 		encodedBlock, err := item.Value()
 		block = Deserialize(encodedBlock)
+
 		return err
 	})
 	Handle(err)
-	iterator.CurrentHash = block.PreviousHash
+
+	iter.CurrentHash = block.PrevHash
+
 	return block
 }
