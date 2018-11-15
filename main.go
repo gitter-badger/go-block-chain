@@ -42,7 +42,7 @@ func (commandLineInterface *CommandLineInterface) PrintChain() {
 		proofOfWork := blockchain.NewProof(block)
 		fmt.Printf("PROOF OF WORK: %s\n", strconv.FormatBool(proofOfWork.Validate()))
 		fmt.Println()
-		if len(block.PreviousHash) != 0 {
+		if len(block.PreviousHash) == 0 {
 			break
 		}
 	}

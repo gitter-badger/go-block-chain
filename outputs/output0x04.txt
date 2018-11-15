@@ -1,0 +1,49 @@
+/**
+ *  SINGLE HASH DISPLAY
+ */
+(master) $ go run main.go createblockchain -address "John Doe"
+2018/11/15 21:14:58 Replaying from value pointer: {Fid:0 Len:0 Offset:0}
+2018/11/15 21:14:58 Iterating file id: 0
+2018/11/15 21:14:58 Iteration took: 19.623µs
+00001509ceae82a2b8c85b76bd8d5fa196b49cbe9fcc1178e237d9d351918870
+GENESIS CREATED.
+FINISHED CREATING BLOCKCHAIN.
+(master) $ go run main.go printchain
+2018/11/15 21:15:17 Replaying from value pointer: {Fid:0 Len:42 Offset:608}
+2018/11/15 21:15:17 Iterating file id: 0
+2018/11/15 21:15:17 Iteration took: 18.557µs
+PREVIOUS HASH:
+MAIN HASH: 00001509ceae82a2b8c85b76bd8d5fa196b49cbe9fcc1178e237d9d351918870
+PROOF OF WORK: true
+
+2018/11/15 21:15:17 Key cannot be empty
+(master) $ go run main.go getbalance -address "John Doe"
+2018/11/15 21:16:15 Replaying from value pointer: {Fid:0 Len:42 Offset:608}
+2018/11/15 21:16:15 Iterating file id: 0
+2018/11/15 21:16:15 Iteration took: 25.545µs
+Balance of John Doe: 100
+(master) $ go run main.go send -from "John Doe" -to "Fred Wilma" -amount 50
+2018/11/15 21:16:54 Replaying from value pointer: {Fid:0 Len:42 Offset:608}
+2018/11/15 21:16:54 Iterating file id: 0
+2018/11/15 21:16:54 Iteration took: 26.112µs
+00000975a47161e63734ff56455868352baff72e51b9cc444abffa270d91d50c
+SUCCESS.
+(master) $ go run main.go printchain
+2018/11/15 21:17:44 Replaying from value pointer: {Fid:0 Len:42 Offset:1315}
+2018/11/15 21:17:44 Iterating file id: 0
+2018/11/15 21:17:44 Iteration took: 15.284µs
+PREVIOUS HASH: 00001509ceae82a2b8c85b76bd8d5fa196b49cbe9fcc1178e237d9d351918870
+MAIN HASH: 00000975a47161e63734ff56455868352baff72e51b9cc444abffa270d91d50c
+PROOF OF WORK: true
+
+(master) $ go run main.go getbalance -address "Fred Wilma"
+2018/11/15 21:18:34 Replaying from value pointer: {Fid:0 Len:42 Offset:1315}
+2018/11/15 21:18:34 Iterating file id: 0
+2018/11/15 21:18:34 Iteration took: 15.732µs
+Balance of Fred Wilma: 50
+(master) $ go run main.go getbalance -address "John Doe"
+2018/11/15 21:19:03 Replaying from value pointer: {Fid:0 Len:42 Offset:1315}
+2018/11/15 21:19:03 Iterating file id: 0
+2018/11/15 21:19:03 Iteration took: 15.815µs
+Balance of John Doe: 50
+(master) $
