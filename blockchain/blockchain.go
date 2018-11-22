@@ -51,6 +51,7 @@ func ContinueBlockChain(address string) *BlockChain {
 	err = database.Update(func(txn *badger.Txn) error {
 		item, err := txn.Get([]byte("lh"))
 		Handle(err)
+		lastHash, err = item.Value()
 		return err
 	})
 	Handle(err)

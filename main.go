@@ -16,9 +16,11 @@ type CommandLineInterface struct{}
 // PrintUsage for printing usage instructions
 func (commandLineInterface *CommandLineInterface) PrintUsage() {
 	fmt.Println("USAGE:")
-	fmt.Println("getbalance -address ADDRESS - get balance for address.")
-	fmt.Println("createblockchain -address ADDRESS - creates a blockchain.")
-	fmt.Println("printchain - prints the blocks in the blockchain.")
+	fmt.Println("    build  : go run main.go   <OPTIONS>")
+	fmt.Println("    release: <executable>     <OPTIONS>")
+	fmt.Println("getbalance -address ADDRESS           - get balance for address.")
+	fmt.Println("createblockchain -address ADDRESS     - creates a blockchain.")
+	fmt.Println("printchain                            - prints the blocks in the blockchain.")
 	fmt.Println("send -from FROM -to TO -amount AMOUNT - send amount from an address to an address.")
 }
 
@@ -72,7 +74,7 @@ func (commandLineInterface *CommandLineInterface) Send(from, to string, amount i
 	fmt.Println("SUCCESS.")
 }
 
-func (commandLineInterface *CommandLineInterface) run() {
+func (commandLineInterface *CommandLineInterface) Run() {
 	commandLineInterface.ValidateArguments()
 	getBalanceCommand := flag.NewFlagSet("getbalance", flag.ExitOnError)
 	createBlockChainCommand := flag.NewFlagSet("createblockchain", flag.ExitOnError)
