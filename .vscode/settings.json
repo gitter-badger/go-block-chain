@@ -4,7 +4,6 @@
         "--exclude=\"\bexported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported\b\""
     ],
     "go.formatTool": "gofmt",
-    "go.buildOnSave": "off",
     "go.coverOnSave": true,
     "go.liveErrors": {
         "enabled": true,
@@ -20,7 +19,8 @@
         "share": true,
         "run": true
     },
-    "go.lintOnSave": "file",
     "go.autocompleteUnimportedPackages": true,
+    "go.testTimeout": "120s",
+    "go.vetOnSave": "off",
     // "go.gopath": "/usr/local/go/bin/go",
 }
