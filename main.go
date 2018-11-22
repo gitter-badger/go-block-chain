@@ -129,5 +129,5 @@ func (commandLineInterface *CommandLineInterface) run() {
 func main() {
 	defer os.Exit(0)
 	commandLineIterface := CommandLineInterface{}
-	commandLineIterface.run()
+	commandLineIterface.Run()
 }
