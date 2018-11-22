@@ -12,7 +12,7 @@
 *.out
 
 # macOS .DS_Store
-*/*/.DS_Store
+*.DS_Store
 
 # tmp directory
 ./tmp
