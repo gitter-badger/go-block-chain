@@ -48,13 +48,13 @@ func ContinueBlockChain(address string) *BlockChain {
 	options.ValueDir = dbPath
 	database, err := badger.Open(options)
 	Handle(err)
-	err1 := database.Update(func(txn *badger.Txn) error {
+	err = database.Update(func(txn *badger.Txn) error {
 		item, err := txn.Get([]byte("lh"))
 		Handle(err)
 		lastHash, err = item.Value()
 		return err
 	})
-	Handle(err1)
+	Handle(err)
 	blockchain := BlockChain{lastHash, database}
 	return &blockchain
 }
@@ -75,7 +75,7 @@ func InitBlockChain(address string) *BlockChain {
 		coinBaseTransaction := CoinBaseTx(address, genesisData)
 		genesis := Genesis(coinBaseTransaction)
 		fmt.Println("GENESIS CREATED.")
-		err = txn.Set(genesis.Hash, genesis.Serialize())
+		err := txn.Set(genesis.Hash, genesis.Serialize())
 		Handle(err)
 		err = txn.Set([]byte("lh"), genesis.Hash)
 		lastHash = genesis.Hash
@@ -87,29 +87,29 @@ func InitBlockChain(address string) *BlockChain {
 }
 
 // AddBlock to the existing BlockChain
-func (blockChain *BlockChain) AddBlock(transactions []*Transaction) {
+func (chain *BlockChain) AddBlock(transactions []*Transaction) {
 	var lastHash []byte
-	err1 := blockChain.DataBase.View(func(txn *badger.Txn) error {
+	err := chain.DataBase.View(func(txn *badger.Txn) error {
 		item, err := txn.Get([]byte("lh"))
 		Handle(err)
 		lastHash, err = item.Value()
 		return err
 	})
-	Handle(err1)
+	Handle(err)
 	newBlock := CreateBlock(transactions, lastHash)
-	err2 := blockChain.DataBase.Update(func(txn *badger.Txn) error {
+	err = chain.DataBase.Update(func(txn *badger.Txn) error {
 		err := txn.Set(newBlock.Hash, newBlock.Serialize())
 		Handle(err)
 		err = txn.Set([]byte("lh"), newBlock.Hash)
-		blockChain.LastHash = newBlock.Hash
+		chain.LastHash = newBlock.Hash
 		return err
 	})
-	Handle(err2)
+	Handle(err)
 }
 
 // Iterator to get the Iterator over the badgerDB
-func (blockChain *BlockChain) Iterator() *ChainIterator {
-	iterator := &ChainIterator{blockChain.LastHash, blockChain.DataBase}
+func (chain *BlockChain) Iterator() *ChainIterator {
+	iterator := &ChainIterator{chain.LastHash, chain.DataBase}
 	return iterator
 }
 
@@ -129,10 +129,10 @@ func (iterator *ChainIterator) Next() *Block {
 }
 
 // FindUnspentTransactions in the BlockChain
-func (blockchain *BlockChain) FindUnspentTransactions(address string) []Transaction {
+func (chain *BlockChain) FindUnspentTransactions(address string) []Transaction {
 	var unSpentTransactions []Transaction
 	spentTxns := make(map[string][]int)
-	iterator := blockchain.Iterator()
+	iterator := chain.Iterator()
 	for {
 		block := iterator.Next()
 		for _, tx := range block.Transactions {
@@ -167,9 +167,9 @@ func (blockchain *BlockChain) FindUnspentTransactions(address string) []Transact
 }
 
 // FindUnspentTransactionsOutputs for getting the unspent transactions in BlockChain
-func (blockchain *BlockChain) FindUnspentTransactionsOutputs(address string) []TxOutput {
+func (chain *BlockChain) FindUnspentTransactionsOutputs(address string) []TxOutput {
 	var unSpentTransactionOutputs []TxOutput
-	unSpentTransactions := blockchain.FindUnspentTransactions(address)
+	unSpentTransactions := chain.FindUnspentTransactions(address)
 	for _, tx := range unSpentTransactions {
 		for _, output := range tx.Outputs {
 			if output.CanBeUnlocked(address) {
@@ -181,9 +181,9 @@ func (blockchain *BlockChain) FindUnspentTransactionsOutputs(address string) []T
 }
 
 // FindSpendableOutputs to find the spendable outputs in the BlockChain
-func (blockchain *BlockChain) FindSpendableOutputs(address string, amount int) (int, map[string][]int) {
+func (chain *BlockChain) FindSpendableOutputs(address string, amount int) (int, map[string][]int) {
 	unSpentOutputs := make(map[string][]int)
-	unSpentTransactions := blockchain.FindUnspentTransactions(address)
+	unSpentTransactions := chain.FindUnspentTransactions(address)
 	accumulated := 0
 Work:
 	for _, tx := range unSpentTransactions {

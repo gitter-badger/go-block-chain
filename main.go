@@ -18,7 +18,7 @@ func (commandLineInterface *CommandLineInterface) PrintUsage() {
 	fmt.Println("USAGE:")
 	fmt.Println("getbalance -address ADDRESS - get balance for address.")
 	fmt.Println("createblockchain -address ADDRESS - creates a blockchain.")
-	fmt.Println("print - prints the blocks in the blockchain.")
+	fmt.Println("printchain - prints the blocks in the blockchain.")
 	fmt.Println("send -from FROM -to TO -amount AMOUNT - send amount from an address to an address.")
 }
 
@@ -41,7 +41,6 @@ func (commandLineInterface *CommandLineInterface) PrintChain() {
 		fmt.Printf("MAIN HASH: %x\n", block.Hash)
 		proofOfWork := blockchain.NewProof(block)
 		fmt.Printf("PROOF OF WORK: %s\n", strconv.FormatBool(proofOfWork.Validate()))
-		fmt.Println()
 		if len(block.PreviousHash) == 0 {
 			break
 		}
@@ -78,7 +77,7 @@ func (commandLineInterface *CommandLineInterface) run() {
 	getBalanceCommand := flag.NewFlagSet("getbalance", flag.ExitOnError)
 	createBlockChainCommand := flag.NewFlagSet("createblockchain", flag.ExitOnError)
 	sendCommand := flag.NewFlagSet("send", flag.ExitOnError)
-	printChainCommand := flag.NewFlagSet("print", flag.ExitOnError)
+	printChainCommand := flag.NewFlagSet("printchain", flag.ExitOnError)
 	getBalanceAddress := getBalanceCommand.String("address", "", "The Address to find Balance.")
 	createBlockChainAddress := createBlockChainCommand.String("address", "", "The Address to send Reward to.")
 	sendFrom := sendCommand.String("from", "", "Source Wallet Address")

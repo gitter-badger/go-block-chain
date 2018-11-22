@@ -1,0 +1,54 @@
+${user}: ${directory}${branch}$ go run main.go help
+USAGE:
+getbalance -address ADDRESS - get balance for address.
+createblockchain -address ADDRESS - creates a blockchain.
+printchain - prints the blocks in the blockchain.
+send -from FROM -to TO -amount AMOUNT - send amount from an address to an address.
+${user}: ${directory}${branch}$ go run main.go createblockchain -address "Alex Dean"
+2018/11/22 22:14:45 Replaying from value pointer: {Fid:0 Len:0 Offset:0}
+2018/11/22 22:14:45 Iterating file id: 0
+2018/11/22 22:14:45 Iteration took: 21.798µs
+00001c18628f7cdefa6b75338b59f2de7d0e236620131a490aa83aa2ae1b0438
+GENESIS CREATED.
+FINISHED CREATING BLOCKCHAIN.
+${user}: ${directory}${branch}$ go run main.go send -from "Alex Dean" -to "Dolores Yang" -amount 10
+2018/11/22 22:15:57 Replaying from value pointer: {Fid:0 Len:42 Offset:608}
+2018/11/22 22:15:57 Iterating file id: 0
+2018/11/22 22:15:57 Iteration took: 16.186µs
+0000111aa20a7ed7c63d2cb2079c1aefbbaeeb1ffe4fef6ec6fb3fbdf0071355
+SUCCESS.
+${user}: ${directory}${branch}$ go run main.go send -from "Alex Dean" -to "Max Brady" -amount 20
+2018/11/22 22:16:51 Replaying from value pointer: {Fid:0 Len:42 Offset:1320}
+2018/11/22 22:16:51 Iterating file id: 0
+2018/11/22 22:16:51 Iteration took: 19.065µs
+00002085c3d897d9306839508c8dab2779d2d291d6d4454b5b2ff28b4b745108
+SUCCESS.
+${user}: ${directory}${branch}$ go run main.go getbalance -address "Alex Dean"
+2018/11/22 22:17:38 Replaying from value pointer: {Fid:0 Len:42 Offset:2031}
+2018/11/22 22:17:38 Iterating file id: 0
+2018/11/22 22:17:38 Iteration took: 17.18µs
+Balance of Alex Dean: 70
+${user}: ${directory}${branch}$ go run main.go getbalance -address "Dolores Yang"
+2018/11/22 22:18:03 Replaying from value pointer: {Fid:0 Len:42 Offset:2031}
+2018/11/22 22:18:03 Iterating file id: 0
+2018/11/22 22:18:03 Iteration took: 15.997µs
+Balance of Dolores Yang: 10
+${user}: ${directory}${branch}$ go run main.go getbalance -address "Max Brady"
+2018/11/22 22:18:23 Replaying from value pointer: {Fid:0 Len:42 Offset:2031}
+2018/11/22 22:18:23 Iterating file id: 0
+2018/11/22 22:18:23 Iteration took: 17.781µs
+Balance of Max Brady: 20
+${user}: ${directory}${branch}$ go run main.go printchain
+2018/11/22 22:18:52 Replaying from value pointer: {Fid:0 Len:42 Offset:2031}
+2018/11/22 22:18:52 Iterating file id: 0
+2018/11/22 22:18:52 Iteration took: 35.376µs
+PREVIOUS HASH: 0000111aa20a7ed7c63d2cb2079c1aefbbaeeb1ffe4fef6ec6fb3fbdf0071355
+MAIN HASH: 00002085c3d897d9306839508c8dab2779d2d291d6d4454b5b2ff28b4b745108
+PROOF OF WORK: true
+PREVIOUS HASH: 00001c18628f7cdefa6b75338b59f2de7d0e236620131a490aa83aa2ae1b0438
+MAIN HASH: 0000111aa20a7ed7c63d2cb2079c1aefbbaeeb1ffe4fef6ec6fb3fbdf0071355
+PROOF OF WORK: true
+PREVIOUS HASH: 
+MAIN HASH: 00001c18628f7cdefa6b75338b59f2de7d0e236620131a490aa83aa2ae1b0438
+PROOF OF WORK: true
+${user}: ${directory}${branch}$ 
