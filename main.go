@@ -6,8 +6,6 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-
-	"github.com/the-code-innovator/go-block-chain/blockchain"
 )
 
 // CommandLineInterface struct for handling command line interface
