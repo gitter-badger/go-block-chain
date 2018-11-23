@@ -5,7 +5,6 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
-	"fmt"
 
 	"golang.org/x/crypto/ripemd160"
 )
@@ -22,15 +21,15 @@ type Wallet struct {
 }
 
 // Address for finding the address of the Wallet
-func (wallet Wallet) Address() []byte {
-	publicKeyHash := PublicKeyHash(wallet.PublicKey)
+func (w Wallet) Address() []byte {
+	publicKeyHash := PublicKeyHash(w.PublicKey)
 	versionedHash := append([]byte{version}, publicKeyHash...)
 	checkSum := GenerateCheckSum(versionedHash)
-	completeHash := append(versionedHash, checkSum...)
-	address := Base58Encode(completeHash)
-	fmt.Printf("PUBLIC KEY: %x\n", wallet.PublicKey)
-	fmt.Printf("PUBLIC HASH: %x\n", publicKeyHash)
-	fmt.Printf("ADDRESS: %x\n", address)
+	fullHash := append(versionedHash, checkSum...)
+	address := Base58Encode(fullHash)
+	// fmt.Printf("PUBLIC KEY: %x\n", w.PublicKey)
+	// fmt.Printf("PUBLIC HASH: %x\n", publicKeyHash)
+	// fmt.Printf("ADDRESS: %x\n", address)
 	return address
 }
 

@@ -3,11 +3,12 @@ package command
 import (
 	"flag"
 	"fmt"
-	"github.com/the-code-innovator/go-block-chain/blockchain"
-	"github.com/the-code-innovator/go-block-chain/wallet"
 	"os"
 	"runtime"
 	"strconv"
+
+	"github.com/the-code-innovator/go-block-chain/blockchain"
+	"github.com/the-code-innovator/go-block-chain/wallet"
 )
 
 // CommandLineInterface struct for handling command line interface
@@ -16,12 +17,14 @@ type CommandLineInterface struct{}
 // PrintUsage for printing usage instructions
 func (commandLineInterface *CommandLineInterface) PrintUsage() {
 	fmt.Println("USAGE:")
-	fmt.Println("	getbalance -address ADDRESS - get balance for address.")
-	fmt.Println("	createblockchain -address ADDRESS - creates a blockchain.")
-	fmt.Println("	printchain - prints the blocks in the blockchain.")
-	fmt.Println("	send -from FROM -to TO -amount AMOUNT - send amount from an address to an address.")
-	fmt.Println("	createwallet - creates a new wallet.")
-	fmt.Println("	listaddresses - lists all addresses in wallet file.")
+	fmt.Println("    -> build  : go run main.go   <OPTIONS>")
+	fmt.Println("    -> release: ./go-block-chain <OPTIONS>")
+	fmt.Println(" • getbalance -address ADDRESS           - get balance for address.")
+	fmt.Println(" • createblockchain -address ADDRESS     - creates a blockchain.")
+	fmt.Println(" • printchain                            - prints the blocks in the blockchain.")
+	fmt.Println(" • send -from FROM -to TO -amount AMOUNT - send amount from an address to an address.")
+	fmt.Println(" • createwallet                          - creates a new wallet.")
+	fmt.Println(" • listaddresses                         - lists the addresses in our wallet file.")
 }
 
 // ValidateArguments to validate the arguments for the CommandLineInterface
@@ -40,13 +43,11 @@ func (commandLineInterface *CommandLineInterface) ListAddresses() {
 	}
 }
 
-func (commandlineInterface *CommandLineInterface) CreateWallet() {
-	// wallets, _ := wallet.CreateWallets()
-	wallets, err := wallet.CreateWallets()
-	wallet.Handle(err)
+func (commandLineInterface *CommandLineInterface) CreateWallet() {
+	wallets, _ := wallet.CreateWallets()
 	address := wallets.AddWallet()
 	wallets.SaveFile()
-	fmt.Printf("NEW ADDRESS IS: %s\n", address)
+	fmt.Printf("NEW ADDRESS: %s\n", address)
 }
 
 // PrintChain to print the Blocks in the BlockChain from commandLineInterface
@@ -60,7 +61,6 @@ func (commandLineInterface *CommandLineInterface) PrintChain() {
 		fmt.Printf("MAIN HASH: %x\n", block.Hash)
 		proofOfWork := blockchain.NewProof(block)
 		fmt.Printf("PROOF OF WORK: %s\n", strconv.FormatBool(proofOfWork.Validate()))
-		fmt.Println()
 		if len(block.PreviousHash) == 0 {
 			break
 		}
@@ -97,9 +97,10 @@ func (commandLineInterface *CommandLineInterface) Run() {
 	getBalanceCommand := flag.NewFlagSet("getbalance", flag.ExitOnError)
 	createBlockChainCommand := flag.NewFlagSet("createblockchain", flag.ExitOnError)
 	sendCommand := flag.NewFlagSet("send", flag.ExitOnError)
-	printChainCommand := flag.NewFlagSet("print", flag.ExitOnError)
+	printChainCommand := flag.NewFlagSet("printchain", flag.ExitOnError)
 	createWalletCommand := flag.NewFlagSet("createwallet", flag.ExitOnError)
 	listAddressesCommand := flag.NewFlagSet("listaddresses", flag.ExitOnError)
+
 	getBalanceAddress := getBalanceCommand.String("address", "", "The Address to find Balance.")
 	createBlockChainAddress := createBlockChainCommand.String("address", "", "The Address to send Reward to.")
 	sendFrom := sendCommand.String("from", "", "Source Wallet Address")
@@ -112,11 +113,11 @@ func (commandLineInterface *CommandLineInterface) Run() {
 	case "createblockchain":
 		err := createBlockChainCommand.Parse(os.Args[2:])
 		blockchain.Handle(err)
-	case "createwallet":
-		err := createWalletCommand.Parse(os.Args[2:])
-		blockchain.Handle(err)
 	case "listaddresses":
 		err := listAddressesCommand.Parse(os.Args[2:])
+		blockchain.Handle(err)
+	case "createwallet":
+		err := createWalletCommand.Parse(os.Args[2:])
 		blockchain.Handle(err)
 	case "printchain":
 		err := printChainCommand.Parse(os.Args[2:])
@@ -145,17 +146,17 @@ func (commandLineInterface *CommandLineInterface) Run() {
 	if printChainCommand.Parsed() {
 		commandLineInterface.PrintChain()
 	}
+	if createWalletCommand.Parsed() {
+		commandLineInterface.CreateWallet()
+	}
+	if listAddressesCommand.Parsed() {
+		commandLineInterface.ListAddresses()
+	}
 	if sendCommand.Parsed() {
 		if *sendFrom == "" || *sendTo == "" || *sendAmount <= 0 {
 			sendCommand.Usage()
 			runtime.Goexit()
 		}
 		commandLineInterface.Send(*sendFrom, *sendTo, *sendAmount)
-	}
-	if createWalletCommand.Parsed() {
-		commandLineInterface.CreateWallet()
-	}
-	if listAddressesCommand.Parsed() {
-		commandLineInterface.ListAddresses()
 	}
 }

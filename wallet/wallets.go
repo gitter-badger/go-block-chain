@@ -19,7 +19,7 @@ func CreateWallets() (*Wallets, error) {
 	wallets := Wallets{}
 	wallets.Wallets = make(map[string]*Wallet)
 	err := wallets.LoadFile()
-	return (&wallets), err
+	return &wallets, err
 }
 
 func (wallets *Wallets) AddWallet() string {
@@ -64,12 +64,4 @@ func (wallets *Wallets) SaveFile() {
 	Handle(err)
 	err = ioutil.WriteFile(walletFile, content.Bytes(), 0644)
 	Handle(err)
-}
-
-func ReturnError(err error) error {
-	if err != nil {
-		return err
-	} else {
-		return nil
-	}
 }

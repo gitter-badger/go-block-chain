@@ -15,4 +15,5 @@
 *.DS_Store
 
 # tmp directory
-./tmp
+tmp/wallets.data
+tmp/blocks/*
