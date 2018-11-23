@@ -1,5 +1,5 @@
 # golang blockchain
-[<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/images/mascot.png" width=25 height=25>](https://golang.org)
+[<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/images/mascot.png" width=40 height=40>](https://golang.org)
 
 ## [Blockchain](https://en.wikipedia.org/wiki/Blockchain):
 * A blockchain, originally block chain, is a growing list of records, called blocks, which are linked using cryptography.
@@ -43,5 +43,5 @@ a block chain in golang with command line interface builtin.
    ```
    to list all public addresses in the wallets database.
 * $EXECUTABLE evaluvates to:
-   - go run main.go : build
-   - ./go-block-chain : release
+   - `go run main.go`      : build
+   - `$PWD/go-block-chain` : release
