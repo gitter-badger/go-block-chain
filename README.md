@@ -13,45 +13,45 @@ a block chain in golang with command line interface builtin.
 
 ## Utilities:
 * getbalance:
-   ```sh
+   ```bash
    $ $EXECUTABLE getbalance -address ADDRESS
    ```
    to get balance of address 'ADDRESS'.
 * createblockchain:
-   ```sh
+   ```bash
    $ $EXECUTABLE createblockchain -address ADDRESS
    ```
    to create a blockchain and send reward to the address 'ADDRESS'.
 * printchain:
-   ```sh
+   ```bash
    $ $EXECUTABLE printchain
    ```
    to print the blocks in the blockchain.
 * send:
-   ```sh
+   ```bash
    $ $EXECUTABLE send -from FROM -to TO -amount AMOUNT
    ```
    to send amount AMOUNT from address FROM to address TO.
 * createwallet:
-   ```sh
+   ```bash
    $ $EXECUTABLE createwallet
    ```
    to create a wallet and store it in the wallets database.
 * listaddresses:
-   ```sh
+   ```bash
    $ $EXECUTABLE listaddresses
    ```
    to list all public addresses in the wallets database.
 * $EXECUTABLE evaluvates to:
    - build:
-      ```sh
+      ```bash
       $ go build
       ```
       build the module.
-      ```sh
+      ```bash
       $ go run main.go
       ```
    - release:
-      ```sh
+      ```bash
       $PWD/go-block-chain
       ```
