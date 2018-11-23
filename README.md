@@ -12,37 +12,36 @@ a block chain in golang with command line interface builtin.
     * [go](https://golang.org)
 
 ## Utilities:
-    * getbalance:
-        ```sh
-        $EXECUTABLE getbalance -address ADDRESS
-        ```
-        to get balance of address 'ADDRESS'.
-    * createblockchain:
-        ```sh
-        $EXECUTABLE createblockchain -address ADDRESS
-        ```
-        to create a blockchain and send reward to the address 'ADDRESS'.
-    * printchain:
-        ```sh
-        $EXECUTABLE printchain
-        ```
-        to print the blocks in the blockchain.
-    * send:
-        ```sh
-        $EXECUTABLE send -from FROM -to TO -amount AMOUNT
-        ```
-        to send amount AMOUNT from address FROM to address TO.
-    * createwallet:
-        ```sh
-        $EXECUTABLE createwallet
-        ```
-        to create a wallet and store it in the wallets database.
-    * listaddresses:
-        ```sh
-        $EXECUTABLE listaddresses
-        ```
-        to list all public addresses in the wallets database.
-    $EXECUTABLE evaluvates to:
-        * go run main.go : build
-        * ./go-block-chain : release
-
+* getbalance:
+   ```sh
+   $EXECUTABLE getbalance -address ADDRESS
+   ```
+   to get balance of address 'ADDRESS'.
+* createblockchain:
+   ```sh
+   $EXECUTABLE createblockchain -address ADDRESS
+   ```
+   to create a blockchain and send reward to the address 'ADDRESS'.
+* printchain:
+   ```sh
+   $EXECUTABLE printchain
+   ```
+   to print the blocks in the blockchain.
+* send:
+   ```sh
+   $EXECUTABLE send -from FROM -to TO -amount AMOUNT
+   ```
+   to send amount AMOUNT from address FROM to address TO.
+* createwallet:
+   ```sh
+   $EXECUTABLE createwallet
+   ```
+   to create a wallet and store it in the wallets database.
+* listaddresses:
+   ```sh
+   $EXECUTABLE listaddresses
+   ```
+   to list all public addresses in the wallets database.
+* $EXECUTABLE evaluvates to:
+   - go run main.go : build
+   - ./go-block-chain : release
