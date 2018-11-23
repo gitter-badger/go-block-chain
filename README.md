@@ -43,15 +43,15 @@ a block chain in golang with command line interface builtin.
    ```
    to list all public addresses in the wallets database.
 * $EXECUTABLE evaluvates to:
+   - dev:
+      ```bash
+      $ go run main.go
+      ```
    - build:
       ```bash
       $ go build
       ```
       build the module.
-      ```bash
-      $ go run main.go
-      ```
-   - release:
       ```bash
       $ $PWD/go-block-chain
       ```
