@@ -53,5 +53,5 @@ a block chain in golang with command line interface builtin.
       ```
    - release:
       ```bash
-      $PWD/go-block-chain
+      $ $PWD/go-block-chain
       ```
