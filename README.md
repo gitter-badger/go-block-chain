@@ -1,7 +1,7 @@
 # [<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/images/mascot.png" width=40 height=40>](https://golang.org)**golang** Block Chain
 
 [<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/images/github.png" width=40 height=40>](https://github.com/the-code-innovator/go-block-chain)
-[<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/imagess/gitter.png" width=40 height=40>](https://gitter.im/go-block-chain/Lobby)
+[<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/images/gitter.png" width=40 height=40>](https://gitter.im/go-block-chain/Lobby)
 
 ## [Blockchain](https://en.wikipedia.org/wiki/Blockchain):
 * A blockchain, originally block chain, is a growing list of records, called blocks, which are linked using cryptography.
