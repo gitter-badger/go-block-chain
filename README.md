@@ -46,7 +46,7 @@ USAGE:
    ```bash
    $ $EXECUTABLE send -from FROM -to TO -amount AMOUNT
    ```
-   - To send amount AMOUNT from address FROM to address TO.
+   - To send amount AMOUNT from address 'FROM' to address 'TO'.
 * createwallet:
    ```bash
    $ $EXECUTABLE createwallet
