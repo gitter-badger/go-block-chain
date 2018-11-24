@@ -1,4 +1,7 @@
 # golang blockchain
+
+[![Join the chat at https://gitter.im/go-block-chain/Lobby](https://badges.gitter.im/go-block-chain/Lobby.svg)](https://gitter.im/go-block-chain/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [<img src="https://raw.githubusercontent.com/the-code-innovator/go-block-chain/master/images/mascot.png" width=40 height=40>](https://golang.org)
 
 ## [Blockchain](https://en.wikipedia.org/wiki/Blockchain):
