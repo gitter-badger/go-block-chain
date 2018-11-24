@@ -17,8 +17,8 @@ type CommandLineInterface struct{}
 // PrintUsage for printing usage instructions
 func (commandLineInterface *CommandLineInterface) PrintUsage() {
 	fmt.Println("USAGE:")
-	fmt.Println("    -> build  : go run main.go   <OPTIONS>")
-	fmt.Println("    -> release: ./go-block-chain <OPTIONS>")
+	fmt.Println("    -> dev   : go run main.go   <OPTIONS>")
+	fmt.Println("    -> build : ./go-block-chain <OPTIONS>")
 	fmt.Println(" • getbalance -address ADDRESS           - get balance for address.")
 	fmt.Println(" • createblockchain -address ADDRESS     - creates a blockchain.")
 	fmt.Println(" • printchain                            - prints the blocks in the blockchain.")
